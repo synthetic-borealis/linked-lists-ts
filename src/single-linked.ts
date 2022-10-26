@@ -10,6 +10,7 @@ interface SingleLinkedNode<T> {
 
 export default class SingleLinkedList<T> implements IIterable<T> {
   #head: SingleLinkedNode<T> | undefined;
+
   #length: number;
 
   constructor() {
@@ -38,7 +39,7 @@ export default class SingleLinkedList<T> implements IIterable<T> {
     if (this.#head === undefined) {
       return undefined;
     }
-    const element = this.#head.element;
+    const { element } = this.#head;
     this.#length = Math.max(0, this.#length - 1);
     this.#head = this.#head.next;
     return element;

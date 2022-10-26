@@ -8,5 +8,9 @@
 *.rs text
 *.toml text
 *.md text
+*.ts text
+*.js text
+*.json text
+*.lock text
 .gitignore text
 .gitattributes text

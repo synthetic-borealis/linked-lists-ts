@@ -4,7 +4,7 @@ describe('new list', () => {
   test('has a length of 0', () => {
     const list = new SingleLinkedList<number>();
 
-    expect(list.length).toBe(0);
+    expect(list).toHaveLength(0);
   });
 
   test('isEmpty', () => {
@@ -19,18 +19,18 @@ describe('push', () => {
     const list = new SingleLinkedList<number>();
 
     list.push(2);
-    expect(list.length).toBe(1);
+    expect(list).toHaveLength(1);
     list.push(4);
-    expect(list.length).toBe(2);
+    expect(list).toHaveLength(2);
     list.push(8);
-    expect(list.length).toBe(3);
+    expect(list).toHaveLength(3);
   });
 });
 
 describe('pop', () => {
   test('returns undefined for empty lists', () => {
     const list = new SingleLinkedList<number>();
-    expect(list.pop()).not.toBeDefined();
+    expect(list.pop()).toBeUndefined();
   });
 
   test('decrements list`s length', () => {
@@ -40,20 +40,20 @@ describe('pop', () => {
     list.push(4);
     list.push(8);
     list.pop();
-    expect(list.length).toBe(2);
+    expect(list).toHaveLength(2);
     list.pop();
-    expect(list.length).toBe(1);
+    expect(list).toHaveLength(1);
     list.pop();
-    expect(list.length).toBe(0);
+    expect(list).toHaveLength(0);
     list.pop();
-    expect(list.length).toBe(0);
+    expect(list).toHaveLength(0);
   });
 });
 
 describe('peek', () => {
   test('returns undefined if list is empty', () => {
     const list = new SingleLinkedList<number>();
-    expect(list.peek()).not.toBeDefined();
+    expect(list.peek()).toBeUndefined();
   });
 
   test('does not decrement list`s length', () => {
@@ -61,7 +61,7 @@ describe('peek', () => {
 
     list.push(2);
     list.peek();
-    expect(list.length).toBe(1);
+    expect(list).toHaveLength(1);
   });
 
   test('retrieves correct element', () => {
@@ -112,7 +112,7 @@ describe('get', () => {
     list.get(1);
     list.get(2);
     list.get(3);
-    expect(list.length).toBe(4);
+    expect(list).toHaveLength(4);
   });
 });
 
@@ -133,11 +133,14 @@ describe('forEach', () => {
   const list = SingleLinkedList.fromArray(array);
 
   test('does`nt modify list`s length', () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // this is necessary for the test to work
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,arrow-body-style
     list.forEach((_a: number) => {
+      // same goes for this
+      // eslint-disable-next-line no-useless-return
       return;
     });
-    expect(list.length).toBe(4);
+    expect(list).toHaveLength(4);
   });
 
   test('works with callbacks with idx parameter', () => {
