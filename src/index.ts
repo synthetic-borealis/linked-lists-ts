@@ -1,5 +1,7 @@
 import SingleLinkedList from './single-linked';
+import DoubleLinkedList from './double-linked';
 
-export { // eslint-disable-next-line import/prefer-default-export
+export {
   SingleLinkedList,
+  DoubleLinkedList,
 };

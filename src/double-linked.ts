@@ -3,18 +3,22 @@ import {
   ForEachCallback,
 } from './iterable';
 
-interface SingleLinkedNode<T> {
+interface DoubleLinkedNode<T> {
   element: T;
-  next: SingleLinkedNode<T> | undefined;
+  prev: DoubleLinkedNode<T> | undefined;
+  next: DoubleLinkedNode<T> | undefined;
 }
 
-export default class SingleLinkedList<T> implements IIterable<T> {
-  #head: SingleLinkedNode<T> | undefined;
+export default class DoubleLinkedList<T> implements IIterable<T> {
+  #head: DoubleLinkedNode<T> | undefined;
+
+  #tail: DoubleLinkedNode<T> | undefined;
 
   #length: number;
 
   constructor() {
     this.#head = undefined;
+    this.#tail = undefined;
     this.#length = 0;
   }
 
@@ -26,30 +30,70 @@ export default class SingleLinkedList<T> implements IIterable<T> {
     return this.#length === 0;
   }
 
-  push(element: T) {
+  pushFront(element: T) {
     const oldHead = this.#head;
-    this.#head = {
+    const newHead: DoubleLinkedNode<T> = {
       element,
+      prev: undefined,
       next: oldHead,
     };
+    this.#head = newHead;
+    if (oldHead) {
+      oldHead.prev = newHead;
+    } else {
+      this.#tail = newHead;
+    }
     this.#length += 1;
   }
 
-  pop() {
+  popFront() {
     if (this.#head === undefined) {
       return undefined;
     }
     const { element } = this.#head;
     this.#length = Math.max(0, this.#length - 1);
     this.#head = this.#head.next;
+    if (!this.#head) {
+      this.#tail = undefined;
+    }
     return element;
   }
 
-  peek() {
-    if (this.#head === undefined) {
+  peekFront() {
+    return this.#head?.element;
+  }
+
+  pushBack(element: T) {
+    const oldTail = this.#tail;
+    const newTail: DoubleLinkedNode<T> = {
+      element,
+      prev: oldTail,
+      next: undefined,
+    };
+    this.#tail = newTail;
+    if (oldTail) {
+      oldTail.next = newTail;
+    } else {
+      this.#head = newTail;
+    }
+    this.#length += 1;
+  }
+
+  popBack() {
+    if (this.#tail === undefined) {
       return undefined;
     }
-    return this.#head.element;
+    const { element } = this.#tail;
+    this.#length = Math.max(0, this.#length - 1);
+    this.#tail = this.#tail.prev;
+    if (!this.#tail) {
+      this.#head = undefined;
+    }
+    return element;
+  }
+
+  peekBack() {
+    return this.#tail?.element;
   }
 
   reverse() {
@@ -59,15 +103,15 @@ export default class SingleLinkedList<T> implements IIterable<T> {
 
     const array: Array<T> = [];
     while (!this.isEmpty) {
-      array.push(this.pop() as T);
+      array.push(this.popFront() as T);
     }
     array.forEach((element) => {
-      this.push(element);
+      this.pushFront(element);
     });
   }
 
   get(index: number) {
-    if (index < 0 || index > this.length - 1) {
+    if (index < 0 || index > this.#length - 1) {
       return undefined;
     }
     let currentIndex = 0;
@@ -80,11 +124,10 @@ export default class SingleLinkedList<T> implements IIterable<T> {
   }
 
   static fromArray<T>(array: Array<T>) {
-    const list = new SingleLinkedList<T>();
+    const list = new DoubleLinkedList<T>();
     const arr = array.slice(0);
-    arr.reverse();
     arr.forEach((element) => {
-      list.push(element);
+      list.pushBack(element);
     });
     return list;
   }
